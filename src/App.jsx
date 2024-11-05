@@ -17,7 +17,6 @@ function App() {
 
   function traduz() {
     if (inputValue.trim() === "") {
-      // Se o campo estiver vazio, exiba uma mensagem de erro
       setError("Por favor, insira um texto para traduzir.");
       return;
     }
@@ -93,7 +92,6 @@ function App() {
                 onChange={(evento) => setInputValue(evento.target.value)}
               ></textarea>
 
-              {/* Botão de tradução */}
               <button
                 onClick={traduz}
                 className="mt-4 bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded"
