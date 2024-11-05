@@ -14,6 +14,8 @@ function App() {
   const [valueTraduz, setValueTraduz] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [sourceLang, setSourceLang] = useState("pt-br");
+  const [targetLang, setTargetLang] = useState("en-us");
 
   function traduz() {
     if (inputValue.trim() === "") {
@@ -25,7 +27,7 @@ function App() {
     setError("");
 
     fetch(
-      `https://api.mymemory.translated.net/get?q=${inputValue}&langpair=pt-br|en`
+      `https://api.mymemory.translated.net/get?q=${inputValue}&langpair=${sourceLang}|${targetLang}`
     )
       .then((resposta) => resposta.json())
       .then((dados) => {
@@ -37,6 +39,12 @@ function App() {
         setIsLoading(false);
       });
   }
+
+  const swapLanguages = () => {
+    setSourceLang(targetLang);
+    setTargetLang(sourceLang);
+    setValueTraduz("");
+  };
 
   return (
     <div className="min-h-screen bg-red-900 flex flex-col">
@@ -51,13 +59,17 @@ function App() {
           <div className="flex items-center justify-between p-4 border-b border-red-600">
             <select
               className="text-sm text-red-200 bg-transparent border-none focus:outline-none cursor-pointer"
-              value="pt-br"
+              value={sourceLang}
+              onChange={(e) => setSourceLang(e.target.value)}
             >
-              <option value="pt-br">Português</option>
-              <option value="en-us">Inglês</option>
+              {languages.map((lang) => (
+                <option key={lang.code} value={lang.code}>
+                  {lang.name}
+                </option>
+              ))}
             </select>
 
-            <button className="p-2 rounded-full hover:bg-red-600 outline-none">
+            <button onClick={swapLanguages} className="p-2 rounded-full hover:bg-red-600 outline-none">
               <svg
                 className="w-5 h-5 text-red-300"
                 fill="none"
@@ -76,10 +88,14 @@ function App() {
 
             <select
               className="text-sm text-red-200 bg-transparent border-none focus:outline-none cursor-pointer"
-              value="en-us"
+              value={targetLang}
+              onChange={(e) => setTargetLang(e.target.value)}
             >
-              <option value="pt-br">Português</option>
-              <option value="en-us">Inglês</option>
+              {languages.map((lang) => (
+                <option key={lang.code} value={lang.code}>
+                  {lang.name}
+                </option>
+              ))}
             </select>
           </div>
 
@@ -89,7 +105,7 @@ function App() {
                 className="w-full h-40 text-lg text-red-200 bg-transparent resize-none border-none outline-none"
                 placeholder="Digite seu texto..."
                 value={inputValue}
-                onChange={(evento) => setInputValue(evento.target.value)}
+                onChange={(e) => setInputValue(e.target.value)}
               ></textarea>
 
               <button
